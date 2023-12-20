@@ -1,19 +1,15 @@
-import streamlit as st
+ import streamlit as st
+import pickle 
 import pandas as pd
 import requests
-import numpy as np
-import pickle
+
 
 url = "https://drive.google.com/uc?export=download&id=1MJRf2iQeIcND3xbSWkslQGh_hmx1AyIF"
 response = requests.get(url)
 
-with open("sparse_matrix.npz", "wb") as file:
+with pickle.load(open("sparse_matrix.pkl", "rb"))as file:
     file.write(response.content)
-
-# Use np.load to load the npz file
-data = np.load("sparse_matrix.npz", allow_pickle=True)
-similarity = data['arr_0']  # Assuming 'arr_0' is the key used when saving the array
-
+    
 def fetch_poster(movie_id):
     # Use requests.get to make the API call
     response = requests.get("https://api.themoviedb.org/3/movie/{}?api_key=6dd5d25c600b8744fe8363ba7ebfae90&language=en-US".format(movie_id))
@@ -30,7 +26,7 @@ def fetch_poster(movie_id):
 def recommend(movie):
     movie_index = movies[movies["title"] == movie].index[0]
     distances = similarity[movie_index]
-    movie_list = sorted(list(enumerate(distances)), reverse=True, key=lambda x: x[1])[1:6]
+    movie_list = sorted(list(enumerate(distances)),reverse=True, key=lambda x: x[1])[1:6]
     recommended_movies = []
     recommended_movies_posters = []
     for i in movie_list:
@@ -45,6 +41,8 @@ def recommend(movie):
 
 movies_dict = pickle.load(open("movies_dict.pkl", "rb")) 
 movies = pd.DataFrame(movies_dict)
+
+similarity = pickle.load(open("sparse_matrix.pkl", "rb"))
 
 st.title("Movie Recommendation System")
 
