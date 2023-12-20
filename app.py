@@ -11,7 +11,7 @@ with open("sparse_matrix.npz", "wb") as file:
     file.write(response.content)
 
 # Use np.load to load the npz file
-data = np.load("sparse_matrix.npz")
+data = np.load("sparse_matrix.npz", allow_pickle=True)
 similarity = data['arr_0']  # Assuming 'arr_0' is the key used when saving the array
 
 def fetch_poster(movie_id):
