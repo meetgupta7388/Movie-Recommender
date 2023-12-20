@@ -7,7 +7,7 @@ import requests
 url = "https://drive.google.com/uc?export=download&id=1MJRf2iQeIcND3xbSWkslQGh_hmx1AyIF"
 response = requests.get(url)
 
-with pickle.load(open("sparse_matrix.pkl", "rb"))as file:
+with open("sparse_matrix.pkl", "rb")as file:
     file.write(response.content)
     
 def fetch_poster(movie_id):
